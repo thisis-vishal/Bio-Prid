@@ -12,7 +12,7 @@ const Hero = () => {
           <h1 className='flex-1 font-poppins font-semibold ss:text-[72px] text-[52px] text-white ss:leading-[100px] leading-[75px]'>AI Powered <br className='sm: hidden'/> Drug Screening
           </h1>
           <div className='ss:flex hidden md:mr-4 mr-0 pr-16'>
-            <GetStarted />
+            <GetStarted to="/models"/>
           </div>
         </div>
 

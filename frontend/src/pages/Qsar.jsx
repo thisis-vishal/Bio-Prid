@@ -1,18 +1,24 @@
-import React, { useState, createRef } from "react";
+import { React, useState, createRef } from "react";
 import styles from "../style";
 import { Navbar, CardDeal, SignInForm } from "../components";
 import data from "../constants/data.json"
 import './Qsar.css'
+import { twitter } from "../assets";
 
-const Qsar = () => {
+const Qsar = (props) => {
 
     const [value, setValue] = useState("");
+    const [targetName, setTargetName] = useState("");
     const [target, setTarget] = useState("");
     const [SelectFile, setSelectFile] = useState(false);
     const [File, setFile] = useState(null);
+    const [showReport, setShowReport] = useState(false);
+    const [temp_data, setTempData] = useState({});
 
     // references
     const myRef = React.createRef();
+    const myBtn = React.createRef();
+    const myReport = React.createRef();
 
     const onChangeProt = (event) => {
         setTarget(event.target.value);
@@ -31,30 +37,49 @@ const Qsar = () => {
 
     const onSearch = (searchTerm, ID) => {
         setTarget(ID);
+        setTargetName(searchTerm);
         const element = myRef.current;
         element.value = searchTerm;
         console.log('search: ', target);
     }
 
     const onSubmit = async (event) => {
+        setShowReport(false);
+        setTempData({});
         event.preventDefault();
-        let postdata;
-        if(!SelectFile) {
-            postdata = {
-                molecule: value,
-                target: target
-            }
-        }
-        else {
-            postdata = {
-                molecule: null,
-                file: File,
-                target: target
-            }
-        }
+        const btn_element = myBtn.current;
+        btn_element.disabled = true;
+        btn_element.innerText = "Processing...";
+        // simpliyfy with ternary operator...
+        let postdata = {
+            // molecule: (!SelectFile ? value : null),
+            // target: target,
+            // file: (!SelectFile ? null : File)
+            molecule: value,
+            targetID: target,
+            targetName: targetName
+        };
 
+        // set showReport->TRUE
         console.log(postdata);
-        console.log(postdata.file);
+        //const response = await fetch("http://localhost:8000/wel", postdata);
+        const response = await fetch('http://localhost:8000/wel', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                molecule: value,
+                targetID: target,
+                targetName: targetName
+            })
+        });
+        const content = await response.json();
+        setShowReport(true);
+        setTempData(content);
+        btn_element.disabled = false;
+        btn_element.innerText = "Submit";
+        console.log("passed");
+        // auto scroll to report div
+        myReport.current.scrollIntoView();
     }
 
     return (
@@ -76,14 +101,14 @@ const Qsar = () => {
                             </div>
                             <div className='flex justify-between items-center w-full py-2'>
                                 <p className='font-poppins leading-[30.8px]
-                            '> QSAR is a computational modeling method for revealing relationships between structural properties of chemical compounds and biological activities. In QSAR modeling, the predictors consist of physico-chemical properties or theoretical molecular descriptors of chemicals; the QSAR response-variable could be a biological activity of the chemicals.<br /><p className="font-poppins text-gray-600 leading-[30.8px]">Please refer to the <a href="#guide" className="text-blue-600"> Guide</a> section to know more about the format for the below inputs.</p></p>
+                            '> QSAR is a computational modeling method for revealing relationships between structural properties of chemical compounds and biological activities. In QSAR modeling, the predictors consist of physico-chemical properties or theoretical molecular descriptors of chemicals; the QSAR response-variable could be a biological activity of the chemicals.<br /><span className="font-poppins text-gray-600 leading-[30.8px]">Please refer to the <a href="/guide" className="text-blue-600"> Guide</a> section to know more about the format for the below inputs.</span></p>
                             </div>
                         </div>
                     </section>
                 </div>
             </div>
 
-            <div className="flex flex-col flex-auto w-full p-20">
+            <div className="flex flex-col flex-auto w-full pt-20">
                 <div className="h-full">
                     <div className="grid grid-cols-3 h-full">
                         <div className="col-span-3 flex justify-center items-center place-items-center">
@@ -92,11 +117,11 @@ const Qsar = () => {
                                     <div className='mb-3'>
                                         <label className='font-medium font-poppins mb-2 flex'>Molecule</label>
                                         <input type="text" placeholder='Enter SMILES notation' className='w-full border rounded-md bg-transparent border-gray-400 p-2 ' onChange={onChangeMol} />
-                                        <input type="file" onChange={handleFileChange}/>
+                                        <input type="file" onChange={handleFileChange} />
                                     </div>
                                     <div className='mb-3'>
                                         <label className='font-medium font-poppins mb-2 flex'>Target</label>
-                                        <input type="text" placeholder='Enter Target protein' className='w-full border rounded-md bg-transparent border-gray-400 p-3' required onChange={onChangeProt} id="prot" ref={myRef}/>
+                                        <input type="text" placeholder='Enter Target protein' className='w-full border rounded-md bg-transparent border-gray-400 p-3' required onChange={onChangeProt} id="prot" ref={myRef} />
                                         <div className="dropdown">
                                             {
                                                 data.filter(item => {
@@ -116,13 +141,103 @@ const Qsar = () => {
                                         </div>
 
                                     </div>
-                                    <button className='block bg-blue-700 text-white w-full py-2 px-8 rounded' type='submit'>Submit</button>
+                                    <button className='block bg-blue-700 text-white w-full py-2 px-8 rounded' ref={myBtn}>Submit</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {showReport &&
+                <div className="py-20" ref={myReport}>
+                    <div className="overflow-x-auto">
+                        <div className="w-full max-w-4xl mx-auto overflow-hidden bg-white divide-y divide-gray-300 rounded-lg">
+                            <span className="font-poppins font-semibold text-[15px] text-green-600 text-center w-full">[SUCCESS] Data Recieved
+                            </span>
+                        </div>
+                        <table className="w-full max-w-4xl mx-auto overflow-hidden bg-white divide-y divide-gray-300 rounded-lg border-solid border-2 border-sky-500">
+                            <thead className="bg-gray-900">
+                                <tr className="text-left text-white">
+                                    <th className="px-6 py-4 text-lg font-bold "> Report </th>
+                                    <th className="px-6 py-4 text-lg text-right font-normal"><button className="bg-blue-700 px-4 rounded hover:bg-blue-800">Save</button></th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                                <tr className="max-w-xs break-words">
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center space-x-3">
+                                            <p className="font-semibold">
+                                                Molecule Name
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td
+                                        style={{ maxWidth: '100px' }}
+                                        className="px-3 py-4 break-all"
+                                    >
+                                        <p className="break-all">
+                                            {temp_data.molecule}
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr className="max-w-xs break-words">
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center space-x-3">
+                                            <p className="font-semibold">
+                                                Protein ID
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td
+                                        style={{ maxWidth: '100px' }}
+                                        className="px-3 py-4 break-all"
+                                    >
+                                        <p className="break-all">
+                                            {temp_data.protein}
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr className="max-w-xs break-words">
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center space-x-3">
+                                            <p className="font-semibold">
+                                                Protein
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td
+                                        style={{ maxWidth: '100px' }}
+                                        className="px-3 py-4 break-all"
+                                    >
+                                        <p className="break-all">
+                                            {temp_data.protein_name}
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr className="max-w-xs break-words">
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center space-x-3">
+                                            <p className="font-semibold">
+                                                Bioactivity
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td
+                                        style={{ maxWidth: '100px' }}
+                                        className="px-3 py-4 break-all"
+                                    >
+                                        <p className="break-all text-red-600">
+                                            {temp_data.bioactivity}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+
         </>
     )
 }

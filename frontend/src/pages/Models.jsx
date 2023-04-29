@@ -15,8 +15,8 @@ const Models = () => {
                 <div className={`flex-1 ${styles.flexStart}
       flex-col xl:px-0 sm:px-16 px-6`}>
                     <div className='flex flex-col justify-between items-center w-full'>
-                        <Button label='Quantitative Structure-Activity Relationship Model'/>
-                        <Button label='Drug-Target Interaction Model'/>
+                        <Button label='Quantitative Structure-Activity Relationship Model' to="/qsar"/>
+                        <Button label='Drug-Target Interaction Model' to="/dti"/>
                         <p className='font-poppins leading-[30.8px]
                             text-white'>Refer to the <a href='guide' className='text-sky-400 font-semibold'>Guide</a> section to know more about the Models.</p>
                     </div>

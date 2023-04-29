@@ -7,6 +7,7 @@ import dropbox from "./dropbox.png";
 import logo from "./logo.svg";
 import quotes from "./quotes.svg";
 import robot from "./robot.png";
+import right from "./right-arrow.png";
 import send from "./Send.svg";
 import shield from "./Shield.svg";
 import star from "./Star.svg";
@@ -24,6 +25,8 @@ import people01 from "./people01.png";
 import people02 from "./people02.png";
 import people03 from "./people03.png";
 import user from "./user.png"
+import download from "./download.png"
+import edit from "./edit.png"
 
 export {
   airbnb,
@@ -51,5 +54,8 @@ export {
   people01,
   people02,
   people03,
-  user
+  user,
+  download,
+  edit,
+  right
 };

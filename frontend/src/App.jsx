@@ -6,6 +6,8 @@ import Dti from './pages/Dti'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import Home from './pages/Home'
 import Models from './pages/Models'
+import Guide from './pages/Guide'
+import Account from './pages/Account'
 
 const App = () => {
 
@@ -40,6 +42,8 @@ const App = () => {
         <Route path='/qsar' exact Component={Qsar} />
         <Route path='/dti' exact Component={Dti} />
         <Route path='/models' exact Component={Models} />
+        <Route path='/guide' exact Component={Guide} />
+        <Route path='/account' exact Component={Account} />
       </Routes>
     </Router>
   )

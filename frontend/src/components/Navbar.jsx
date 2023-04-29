@@ -24,7 +24,7 @@ const Navbar = ({ colorChange, signed }) => {
               ${index === navLinks.length - 1 ? 'mr-0' : 'mr-10'}
               ${colorChange ? "text-black" : "text-white"} mr-10`}
             >
-              <a href={`http://localhost:5172/${nav.id}`}>
+              <a href={`http://localhost:5173/${nav.id}`}>
                 {nav.title}
               </a>
             </li>
