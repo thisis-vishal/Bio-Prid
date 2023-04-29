@@ -17,6 +17,14 @@ By target here, we mean target proteins and enzymes.
 
 ***
 
+### Contributors
+
+Vishal Kumar - Backend Developer
+Aditya Rana - Frontend Developer
+Om Pachauli - AI/DL Engineer
+
+***
+
 # Structure of Application
 ## QSAR Model
 ![QSAR Model](https://www.creative-biolabs.com/drug-discovery/therapeutics/images/3-1-3-SAR-and-QSAR-Models.png)

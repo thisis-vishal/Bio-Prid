@@ -1,0 +1,10 @@
+.dropdown-row:hover {
+    background-color: rgb(148, 199, 243);
+}
+
+.dropdown-row {
+    cursor: pointer;
+    text-align: start;
+    margin: 2px 0;
+    font-size: small;
+}
