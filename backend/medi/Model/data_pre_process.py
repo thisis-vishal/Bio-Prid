@@ -11,16 +11,6 @@ Original file is located at
 
 # pip install chembl_webresource_client
 
-# from google.colab import files
-
-
-# from EDA import ftr_extract
-# from molecular_descriptors_and_fingerprinting import mol_desc
-
-# new_client
-
-# target search for 'coronavirus'
-from pathlib import Path  
 import pandas as pd
 from chembl_webresource_client.new_client import new_client
 
@@ -29,52 +19,21 @@ def preProcess(id):
     target = new_client.target
     target_query = target.search(id)
     targets = pd.DataFrame.from_dict(target_query)
-    # targets.head(10)
-
-    # uniprot_access = [0 if len(targets["target_components"][i]) == 0 else targets["target_components"]
-    #                   [i][0]["accession"] for i in range(targets["target_components"].count())]
-
-    # # uniprot_access
-
-    # targets["uniprot_access"] = uniprot_access
-
-    # # targets.info()
-
-    # targets.to_csv('targets.csv', index=False)
-
-    # targets.to_csv('targets.csv', encoding='utf-8-sig')
-    # files.download('targets.csv')
-
-    # Select and retrieve bioactivity data for SARS coronavirus 3C-like proteinase
-    # What is protease and what does it do?
-    # Proteases are enzymes that break the peptide bonds of proteins
-    # Enzyme : a substance produced by a living organism which acts as a catalyst to bring about a specific biochemical reaction.
-    # The molecules upon which enzymes may act are called substrates, and the enzyme converts the substrates into different molecules known as products
+    
+    # selected_target
 
     selected_target = targets.target_chembl_id[0]
-    # selected_target
 
     # Retrieve bioactivity
 
     activity = new_client.activity
     res = activity.filter(target_chembl_id=selected_target).filter(
         standard_type="IC50")
-
-    # res
-
     df = pd.DataFrame.from_dict(res)
-
-    # df
 
     # Save bioactivity to a CSV file
     
     df.to_csv('medi/Model/bioactivity_data_raw.csv', index=False)
-
-    # new_data.to_csv("list_compound.csv", index=False)
-
-    # files.download('list_compound.csv')
-
-    # df.info()
 
     # Drop missing 'standard_value' values
 
@@ -109,10 +68,3 @@ def preProcess(id):
     # Save dataframe to csv file
 
     df4.to_csv('medi/Model/bioactivity_data_preprocessed.csv', index=False)
-    # bio_act_file = ftr_extract(df4)
-    # bio_pubchem_fp = mol_desc(bio_act_file)
-
-    # return bio_pubchem_fp
-
-    # x=target_search('CHEMBL3927')
-    # print(x)
