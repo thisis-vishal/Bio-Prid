@@ -1,9 +1,10 @@
-import { React, useState, createRef } from "react";
+import React from "react";
+import { useState } from "react";
 import styles from "../style";
 import { Navbar, CardDeal, SignInForm } from "../components";
 import data from "../constants/data.json"
 import './Qsar.css'
-import { twitter } from "../assets";
+import axios from 'axios'
 
 const Qsar = (props) => {
 
@@ -11,9 +12,10 @@ const Qsar = (props) => {
     const [targetName, setTargetName] = useState("");
     const [target, setTarget] = useState("");
     const [SelectFile, setSelectFile] = useState(false);
-    const [File, setFile] = useState(null);
+    const [file, setFile] = useState(null);
     const [showReport, setShowReport] = useState(false);
     const [temp_data, setTempData] = useState({});
+    const [auth, setAuth] = useState(false);
 
     // references
     const myRef = React.createRef();
@@ -38,8 +40,7 @@ const Qsar = (props) => {
     const onSearch = (searchTerm, ID) => {
         setTarget(ID);
         setTargetName(searchTerm);
-        const element = myRef.current;
-        element.value = searchTerm;
+        myRef.current.value = searchTerm;
         console.log('search: ', target);
     }
 
@@ -51,35 +52,95 @@ const Qsar = (props) => {
         btn_element.disabled = true;
         btn_element.innerText = "Processing...";
         // simpliyfy with ternary operator...
-        let postdata = {
-            // molecule: (!SelectFile ? value : null),
-            // target: target,
-            // file: (!SelectFile ? null : File)
-            molecule: value,
-            targetID: target,
-            targetName: targetName
-        };
+        // let postdata = {
+        //     molecule: (!SelectFile ? value : null),
+        //     target: target,
+        //     file: (!SelectFile ? null : File)
+        //     // molecule: value,
+        //     // targetID: target,
+        //     // targetName: targetName
+        // };
 
-        // set showReport->TRUE
-        console.log(postdata);
-        //const response = await fetch("http://localhost:8000/wel", postdata);
-        const response = await fetch('http://localhost:8000/wel', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+        let user_details, user_data_json;
+        try {
+            user_details = await fetch("http://localhost:8000/user", {
+                method: 'GET',
+                credentials: 'include'
+            });
+            user_data_json = await user_details.json();
+            console.log(user_data_json);
+            if (user_data_json.detail === "verified") {
+                console.log('verified ok');
+                setAuth(false);
+            }
+            else {
+                setAuth(true);
+                return;
+            }
+        }
+        catch (e) {
+            console.log(e);
+            return;
+        }
+
+        let url, postdata;
+        let _file = false;
+        let formData = new FormData();
+        if (SelectFile) {
+            btn_element.innerText = "Your file will be downloaded..."
+            formData = new FormData();
+            formData.append('molecules', file);
+            formData.append('targetID', target);
+            formData.append('targetName', targetName);
+            _file = true;
+            url = "http://localhost:8000/wel2";
+        }
+        else {
+            postdata = {
                 molecule: value,
                 targetID: target,
                 targetName: targetName
-            })
-        });
-        const content = await response.json();
-        setShowReport(true);
-        setTempData(content);
+            };
+            url = "http://localhost:8000/wel";
+        }
+
+        // set showReport->TRUE
+        console.log(postdata);
+
+        let args;
+        if (_file == true) {
+            args = {
+                method: 'POST',
+                body: formData
+            }
+        }
+        else {
+            args = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(postdata)
+            }
+        }
+        const response = await fetch(url, args);
+        if (_file) {
+            const content = await response.blob();
+            var csvURL = window.URL.createObjectURL(content);
+            var tempLink = document.createElement('a');
+            tempLink.href = csvURL;
+            tempLink.setAttribute('download', 'filename.csv');
+            tempLink.click();
+        }
+        else {
+            const content = await response.json();
+            console.log("content: ", content);
+            setShowReport(true);
+            setTempData(content);
+        }
         btn_element.disabled = false;
         btn_element.innerText = "Submit";
-        console.log("passed");
+
         // auto scroll to report div
-        myReport.current.scrollIntoView();
+        // myReport.current.scrollIntoView();
     }
 
     return (
@@ -142,6 +203,16 @@ const Qsar = (props) => {
 
                                     </div>
                                     <button className='block bg-blue-700 text-white w-full py-2 px-8 rounded' ref={myBtn}>Submit</button>
+                                    {auth &&
+                                        <div>
+                                            <div className="overflow-x-auto">
+                                                <div className="w-full max-w-4xl mx-auto overflow-hidden bg-white divide-y divide-gray-300 rounded-lg">
+                                                    <span className="font-poppins font-semibold text-[15px] text-red-600 text-center w-full">[INFO] You need to be signed in to perform this operation!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
                                 </form>
                             </div>
                         </div>
