@@ -20,6 +20,7 @@ class DTI(serializers.Serializer):
 class DTI_CSV(serializers.Serializer):
     molecules = serializers.FileField()
     targetName=serializers.FileField()
+    email=serializers.CharField(max_length=100)
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

@@ -17,6 +17,7 @@ from itertools import chain
 connect_string="mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false"
 from django.conf import settings
 my_client = pymongo.MongoClient(connect_string)
+import requests
 dbname = my_client['BioPrid']
 collection_name = dbname["medi_History"]
 
@@ -58,15 +59,27 @@ class ReactView2(APIView):
         x=PaDel_Descriptor.fp_pred(lst)
         y=model_v1.QSAR(x)
         dumfiles.delfile()
-        print(y)
+        final_data=lst
+        final_data["BioActivity"] = y
+        final_data.to_csv('medi/Model/final_data.csv', index=False)
         return(y)
 
     
     def post(self, request):
         serializer =ReactSerializer2(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            return  Response({'bioactivity':self.out(request.data),'protein':request.data['targetID'],'protein_name':request.data['targetName'],'molecule':request.data['molecule']})
-
+            x=self.out(request.data)
+            response = HttpResponse(
+                content_type="text/csv",
+                headers={"Content-Disposition": 'attachment; filename="final_data.csv"'},
+            )
+            writer = csv.writer(response)
+            with open('medi/Model/final_data.csv', mode="r") as csv_file:
+                reader = csv.reader(csv_file) 
+                for item in reader:
+                     writer.writerow(item)
+            return response
+            
 
 class DTIModel(APIView):
     serializer_class = DTI
@@ -81,6 +94,8 @@ class DTIModel(APIView):
 
 class DTICSV(APIView):
     serializer_class = DTI_CSV
+
+    
     def out1(self,data):
         print(data['molecules'])
         df=pd.read_csv(data['molecules'])
@@ -92,15 +107,22 @@ class DTICSV(APIView):
         final_data = pd.concat([df,dp],axis=1)
         final_data["affinity"] = affinity
         final_data.to_csv('medi/Model/final_data.csv', index=False)
-        return final_data
-        # response = HttpResponse(content_type='text/csv')
-        # response['Content-Disposition'] = 'attachment; filename="export.csv"'
-        # writer = csv.DictWriter(response, fieldnames=['emp_name', 'dept', 'birth_month'])
-        # writer.writeheader()
-        # writer.writerow({'emp_name': 'John Smith', 'dept': 'Accounting', 'birth_month': 'November'})
-        # writer.writerow({'emp_name': 'Erica Meyers', 'dept': 'IT', 'birth_month': 'March'})
-        # return response
 
+        header = ['smiles', 'proteins', 'affinity']
+        csvFile = open('medi/Model/final_data.csv', 'r')
+        reader = csv.DictReader(csvFile)
+        column=[]
+        for each in reader:
+            row={}
+            for field in header:
+                row[field] = each[field]
+            column.append(row)
+        collection_name.update_one({'email':data['email']}, {'$push':{'DTI':column}})
+        
+        
+        return final_data
+    
+    
     def post(self, request):
         serializer = DTI_CSV(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -110,12 +132,11 @@ class DTICSV(APIView):
                 headers={"Content-Disposition": 'attachment; filename="final_data.csv"'},
             )
             writer = csv.writer(response)
-            writer.writerow(['smiles', 'proteins', 'affinity'])
-            for z in x:
-                writer.writerow([z['smiles'],
-                                z['proteins'],
-                                z['affinity'],
-                                ])
+            with open('medi/Model/final_data.csv', mode="r") as csv_file:
+                reader = csv.reader(csv_file) 
+                for item in reader:
+                     writer.writerow(item)
+
             return response
 
 class RegisterView(APIView):
@@ -201,3 +222,6 @@ def rt(request):
     med_details = collection_name.find({})
     return HttpResponse(med_details)
 
+def check(request):
+    x=UserView.get
+    print(x.json())

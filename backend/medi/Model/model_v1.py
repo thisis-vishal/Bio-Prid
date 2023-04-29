@@ -113,18 +113,14 @@ def QSAR(fp):
     # fingerprint
 
     res = MLP.predict(fingerprint, verbose=0)
-    print(res)
 
-    # result = []
-    # for r in res:
-    #     if r[0] >= 0.5:
-    #        result.append("active") 
-    #     else:
-    #         result.append("inactive")
+    result = []
+    for r in res:
+        if r[0] >= 0.5:
+           result.append("active") 
+        else:
+            result.append("inactive")
     
-    # res_df = pd.DataFrame(result)
-    # return res
-    if res >= 0.5:
-        return "active"
-    else:
-        return "inactive"
+    res_df = pd.DataFrame(result)
+    return res_df
+
