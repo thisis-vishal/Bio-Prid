@@ -43,9 +43,14 @@ def DTI_model(drug,protein):
   tokenizer_proteins.fit_on_texts(train_proteins)
 
   def predict_pKd(drug, protein):
-
-    drugs = drug["smiles"].values.tolist()
-    proteins = protein["proteins"].values.tolist()
+    if type(drug) != str:
+      drugs = drug["smiles"].values.tolist()
+    else:
+      drugs = [drug]
+    if type(protein) != str:
+      proteins = protein["proteins"].values.tolist()
+    else:
+      proteins = [protein]
 
     drug_sequence = []
     drug_padded = []

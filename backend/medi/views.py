@@ -14,12 +14,13 @@ import datetime
 import pymongo
 import csv
 from itertools import chain
-connect_string="mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false"
+connect_string="mongodb://localhost:27017"
 from django.conf import settings
 my_client = pymongo.MongoClient(connect_string)
 import requests
 dbname = my_client['BioPrid']
-collection_name = dbname["medi_History"]
+collection_name = dbname["medi_history"]
+
 
 
 # Create your views here.
@@ -37,8 +38,9 @@ class ReactView(APIView):
         df.columns=['canonical_smiles']
         x=PaDel_Descriptor.fp_pred(df)
         y=model_v1.QSAR(x)
+        print(y[0])
         dumfiles.delfile()
-        return(y)
+        return(y[0])
 
     
     def post(self, request):
@@ -62,6 +64,20 @@ class ReactView2(APIView):
         final_data=lst
         final_data["BioActivity"] = y
         final_data.to_csv('medi/Model/final_data.csv', index=False)
+        header = ['smiles', 'BioActivity']
+        csvFile = open('medi/Model/final_data.csv', 'r')
+        reader = csv.DictReader(csvFile)
+
+        column=[]
+        for each in reader:
+            row={}
+            for field in header:
+                row[field] = each[field]
+            column.append(row)
+
+        dataS={"time":datetime.datetime.today(),'data':column}
+        collection_name.update_one({'email':data['email']}, {'$push':{"QSAR":dataS}})
+        
         return(y)
 
     
@@ -70,7 +86,7 @@ class ReactView2(APIView):
         if serializer.is_valid(raise_exception=True):
             x=self.out(request.data)
             response = HttpResponse(
-                content_type="text/csv",
+                content_type="application/csv",
                 headers={"Content-Disposition": 'attachment; filename="final_data.csv"'},
             )
             writer = csv.writer(response)
@@ -107,17 +123,19 @@ class DTICSV(APIView):
         final_data = pd.concat([df,dp],axis=1)
         final_data["affinity"] = affinity
         final_data.to_csv('medi/Model/final_data.csv', index=False)
-
         header = ['smiles', 'proteins', 'affinity']
         csvFile = open('medi/Model/final_data.csv', 'r')
         reader = csv.DictReader(csvFile)
+
         column=[]
         for each in reader:
             row={}
             for field in header:
                 row[field] = each[field]
             column.append(row)
-        collection_name.update_one({'email':data['email']}, {'$push':{'DTI':column}})
+
+        dataS={"time":datetime.datetime.today(),'data':column}
+        collection_name.update_one({'email':data['email']}, {'$push':{"DTI":dataS}})
         
         
         return final_data
@@ -144,6 +162,8 @@ class RegisterView(APIView):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        mydict = { "email": serializer.data['email']}
+        x = collection_name.insert_one(mydict)
         return Response(serializer.data)
 
 

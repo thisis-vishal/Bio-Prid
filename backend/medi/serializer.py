@@ -11,6 +11,7 @@ class ReactSerializer2(serializers.Serializer):
     molecules=serializers.FileField()
     targetID=serializers.CharField(max_length=1200)
     targetName=serializers.CharField(max_length=1200)
+    email=serializers.CharField(max_length=100)
 
 class DTI(serializers.Serializer):
     molecule=serializers.CharField(max_length=1200)
