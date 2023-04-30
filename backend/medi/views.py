@@ -261,26 +261,15 @@ class ParicularHistory(APIView):
                     answer=i
             return Response({"data":answer['data']})
         
+class DeleteHistory(APIView):
 
-def about(request):
-    return render(request,"about.html")
-def home(request):
-    context = {"diseases":perf.Perf}
-    return render(request,"home.html",context)
-def some_name(request):
-    check={
-    "email":"abc@bbc",
-    "QSAR":['asa']
-    }
-    collection_name.insert(check)
-    return HttpResponse("Done")
-def up(request):
-    update_data = collection_name.update_one({'email':'abc@bbc'}, {'$push':{'QSAR':89}})
-    return HttpResponse("Done")
-def rt(request):
-    med_details = collection_name.find({})
-    return HttpResponse(med_details)
+    def parse_json(self,data):
+        return json.loads(json_util.dumps(data))
 
-def check(request):
-    x=UserView.get
-    print(x.json())
+    def post(self, request):
+        serializer = phistorygiver(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            print(request.data['name'],request.data['email'])
+            print(collection_name.update({'email':request.data['email']},{'$pull':{'DTI':{'name':request.data['name']}}}))
+            print(collection_name.update({'email':request.data['email']},{'$pull':{'QSAR':{'name':request.data['name']}}}))
+            return Response({"data":'done'})

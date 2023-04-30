@@ -2,8 +2,6 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 urlpatterns = [
-    path('', views.home),
-    path('about',views.about),
     path('wel', views.ReactView.as_view(), name="something"),
     path('wel2', views.ReactView2.as_view(), name="something"),
     path('del', views.DTIModel.as_view(), name="something"),
@@ -12,8 +10,7 @@ urlpatterns = [
     path('login', views.LoginView.as_view()),
     path('user', views.UserView.as_view()),
     path('logout', views.LogoutView.as_view()),
-    path('check',views.some_name),
-    path('test',views.up),
     path('history',views.History.as_view()),
-    path('particularhistory',views.ParicularHistory.as_view())
+    path('particularhistory',views.ParicularHistory.as_view()),
+    path('delhistory',views.DeleteHistory.as_view()),
 ]

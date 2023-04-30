@@ -55,7 +55,7 @@ const Account = (props) => {
             <div className="bg-primary w-full">
                 <div className={`${styles.paddingX} ${styles.flexCenter}`}>
                     <div className={`${styles.boxWidth}`}>
-                        <Navbar signed={props.signed}/>
+                        <Navbar signed={props.signed} />
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@ const Account = (props) => {
                     </div>
                     <div className='flex flex-col h-full w-full pl-2 pr-2 overflow-auto'>
                         {account && Acc_det(username, userID)}
-                        {history && History(data)}
+                        {history && History(data, userID)}
                     </div>
                 </div>
             </div>
@@ -139,7 +139,25 @@ const export_file = (data, name) => {
     a.remove()
 }
 
-const History = (data) => {
+const delFile = async (userID, name) => {
+    console.log(name,userID)
+    try {
+        const response = await fetch("http://localhost:8000/delhistory", {
+            method: 'POST',
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json'},
+            body:JSON.stringify({
+                name: name,
+                email:userID
+            })
+        });
+        const content = await response.json();
+        console.log(content);
+    }
+    catch(err) {console.log(err)}
+}
+
+const History = (data, userID) => {
     return (
         <div className='bg-gray-200 flex flex-col h-full p-6 overflow-scroll'>
 
@@ -147,8 +165,11 @@ const History = (data) => {
                 <div className={`w-full hover:border-2 hover:border-black hover:font-semibold hover:transition bg-save rounded p-2 mb-2`}>
                     <span className='font-poppins text-[12px] mr-4'>Created: {new Date(item.time.$date).toLocaleString('en-IN', { timeZone: 'IST' })}</span>
                     <span className='text-blue-600 font-semibold text-[14px] float-right cursor-pointer ml-2 mr-2 mt-auto mb-auto hover:shadow-lg'>
-                        <button onClick={() => export_file(item.data, item.name)}>Download</button></span>
-                    <span className='font-poppins font-semibold text-[14px] text-red-600 float-right cursor-pointer ml-2 mr-2'>Delete</span>
+                        <button onClick={() => export_file(item.data, item.name)}>Download</button>
+                    </span>
+                    <span className='font-poppins font-semibold text-[14px] text-red-600 float-right cursor-pointer ml-2 mr-2'>
+                        <button onClick={() => delFile(userID,item.name)}>Delete</button>
+                    </span>
                     <br />
                     <div className='w-full flex flex-row'>
                         <span className='font-poppins font-semibold text-[14px] text-blue-800'>{item.name}.csv</span>
