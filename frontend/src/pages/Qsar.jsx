@@ -16,11 +16,13 @@ const Qsar = (props) => {
     const [showReport, setShowReport] = useState(false);
     const [temp_data, setTempData] = useState({});
     const [auth, setAuth] = useState(false);
+    const [filename, setFileName] = useState("");
 
     // references
     const myRef = React.createRef();
     const myBtn = React.createRef();
     const myReport = React.createRef();
+    const myFileName = React.createRef();
 
     const onChangeProt = (event) => {
         setTarget(event.target.value);
@@ -30,6 +32,10 @@ const Qsar = (props) => {
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
         setSelectFile(true);
+    }
+
+    const onChangeFileName = (event) => {
+        setFileName(event.target.value);
     }
 
     const onChangeMol = (event) => {
@@ -93,6 +99,7 @@ const Qsar = (props) => {
             formData.append('targetID', target);
             formData.append('targetName', targetName);
             formData.append("email", user_data_json.data.email);
+            formData.append("name", filename);
             _file = true;
             url = "http://localhost:8000/wel2";
         }
@@ -128,7 +135,7 @@ const Qsar = (props) => {
             var csvURL = window.URL.createObjectURL(content);
             var tempLink = document.createElement('a');
             tempLink.href = csvURL;
-            tempLink.setAttribute('download', 'filename.csv');
+            tempLink.setAttribute('download', `${filename}.csv`);
             tempLink.click();
         }
         else {
@@ -201,7 +208,8 @@ const Qsar = (props) => {
                                                     ))
                                             }
                                         </div>
-
+                                        {SelectFile && 
+                                        <input type="text" placeholder='Output Filename...' className='w-full border rounded-md bg-transparent border-gray-400 p-3 mt-2' required onChange={onChangeFileName} id="prot" ref={myFileName} />}
                                     </div>
                                     <button className='block bg-blue-700 text-white w-full py-2 px-8 rounded' ref={myBtn}>Submit</button>
                                     {auth &&

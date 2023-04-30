@@ -1,6 +1,6 @@
-Processing AUTOGEN_finger_1 in finger.smi (1/5). 
 Processing AUTOGEN_finger_2 in finger.smi (2/5). 
-Processing AUTOGEN_finger_4 in finger.smi (4/5). Average speed: 0.53 s/mol.
-Processing AUTOGEN_finger_3 in finger.smi (3/5). Average speed: 1.06 s/mol.
-Processing AUTOGEN_finger_5 in finger.smi (5/5). Average speed: 0.44 s/mol.
-Descriptor calculation completed in 1.535 secs . Average speed: 0.31 s/mol.
+Processing AUTOGEN_finger_1 in finger.smi (1/5). 
+Processing AUTOGEN_finger_4 in finger.smi (4/5). Average speed: 0.65 s/mol.
+Processing AUTOGEN_finger_3 in finger.smi (3/5). Average speed: 1.29 s/mol.
+Processing AUTOGEN_finger_5 in finger.smi (5/5). Average speed: 0.78 s/mol.
+Descriptor calculation completed in 1.798 secs . Average speed: 0.36 s/mol.

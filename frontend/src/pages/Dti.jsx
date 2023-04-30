@@ -16,11 +16,13 @@ const Dti = (props) => {
     const [temp_data, setTempData] = useState({});
     const [auth, setAuth] = useState(false);
     const [file, setFile] = useState(false);
+    const [filename, setFileName] = useState("");
 
     // references
     const myRef = React.createRef();
     const myBtn = React.createRef();
     const myReport = React.createRef();
+    const myFileName = React.createRef();
 
     const onChangeProt = (event) => {
         setTarget(event.target.value);
@@ -31,6 +33,10 @@ const Dti = (props) => {
         setMolFile(event.target.files[0]);
         setFile(true);
         setSelectMolFile(true);
+    }
+
+    const onChangeFileName = (event) => {
+        setFileName(event.target.value);
     }
 
     const handleProtFileChange = (event) => {
@@ -100,6 +106,7 @@ const Dti = (props) => {
             formData.append("molecules", MolFile);
             formData.append("targetName", ProtFile);
             formData.append("email", user_data_json.data.email);
+            formData.append("name", filename);
             url = "http://localhost:8000/del2";
         }
         else {
@@ -187,6 +194,8 @@ const Dti = (props) => {
                                         <input type="text" placeholder='Enter Target protein' className='w-full border rounded-md bg-transparent border-gray-400 p-3' required onChange={onChangeProt} id="prot" ref={myRef} disabled={file}/>
                                         <input type="file" onChange={handleProtFileChange} />
 
+                                        {file && 
+                                        <input type="text" placeholder='Output Filename...' className='w-full border rounded-md bg-transparent border-gray-400 p-3 mt-4' required onChange={onChangeFileName} id="prot" ref={myFileName} />}
                                     </div>
                                     <button className='block bg-blue-700 text-white w-full py-2 px-8 rounded' ref={myBtn}>Submit</button>
                                     {auth &&
