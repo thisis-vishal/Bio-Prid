@@ -10,10 +10,13 @@ from .Model import data_pre_process,EDA,model_v1,molecular_descriptors_and_finge
 import pandas as pd
 from .models import User, History
 import jwt
+import json
 import datetime
 import pymongo
 import csv
 from itertools import chain
+import numpy as np
+from bson import json_util
 connect_string="mongodb://localhost:27017"
 from django.conf import settings
 my_client = pymongo.MongoClient(connect_string)
@@ -75,7 +78,7 @@ class ReactView2(APIView):
                 row[field] = each[field]
             column.append(row)
 
-        dataS={"time":datetime.datetime.today(),'data':column}
+        dataS={"time":datetime.datetime.today(),'data':column,'name':data['name']}
         collection_name.update_one({'email':data['email']}, {'$push':{"QSAR":dataS}})
         
         return(y)
@@ -134,7 +137,7 @@ class DTICSV(APIView):
                 row[field] = each[field]
             column.append(row)
 
-        dataS={"time":datetime.datetime.today(),'data':column}
+        dataS={"time":datetime.datetime.today(),'data':column,'name':data['name']}
         collection_name.update_one({'email':data['email']}, {'$push':{"DTI":dataS}})
         
         
@@ -222,7 +225,43 @@ class LogoutView(APIView):
             'message': 'success'
         }
         return response
-    
+
+class History(APIView):
+
+    def parse_json(self,data):
+        return json.loads(json_util.dumps(data))
+
+    def post(self, request):
+        serializer = historygiver(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            x=collection_name.find({ 'email':request.data['email']})
+            y=self.parse_json(x)
+            print(y)
+            return Response({"data":y[0]})
+
+class ParicularHistory(APIView):
+
+    def parse_json(self,data):
+        return json.loads(json_util.dumps(data))
+
+    def post(self, request):
+        serializer = phistorygiver(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            x=collection_name.find({ 'email':request.data['email']})
+            y=self.parse_json(x)
+            z=y[0]["DTI"]
+            m=y[0]["QSAR"]
+            answer=None
+            datetime_object = request.data['name']
+            for i in z:
+                if i["name"]==datetime_object:
+                    answer=i
+            for i in m:
+                if i["name"]==datetime_object:
+                    answer=i
+            return Response({"data":answer['data']})
+        
+
 def about(request):
     return render(request,"about.html")
 def home(request):

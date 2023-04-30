@@ -92,6 +92,7 @@ const Qsar = (props) => {
             formData.append('molecules', file);
             formData.append('targetID', target);
             formData.append('targetName', targetName);
+            formData.append("email", user_data_json.data.email);
             _file = true;
             url = "http://localhost:8000/wel2";
         }
@@ -105,10 +106,10 @@ const Qsar = (props) => {
         }
 
         // set showReport->TRUE
-        console.log(postdata);
+        console.log(formData);
 
         let args;
-        if (_file == true) {
+        if (SelectFile) {
             args = {
                 method: 'POST',
                 body: formData

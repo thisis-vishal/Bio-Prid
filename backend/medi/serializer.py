@@ -12,6 +12,8 @@ class ReactSerializer2(serializers.Serializer):
     targetID=serializers.CharField(max_length=1200)
     targetName=serializers.CharField(max_length=1200)
     email=serializers.CharField(max_length=100)
+    name=serializers.CharField()
+
 
 class DTI(serializers.Serializer):
     molecule=serializers.CharField(max_length=1200)
@@ -22,6 +24,14 @@ class DTI_CSV(serializers.Serializer):
     molecules = serializers.FileField()
     targetName=serializers.FileField()
     email=serializers.CharField(max_length=100)
+    name=serializers.CharField()
+
+class historygiver(serializers.Serializer):
+    email=serializers.CharField(max_length=100)
+
+class phistorygiver(serializers.Serializer):
+    email=serializers.CharField(max_length=100)
+    name=serializers.CharField()
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

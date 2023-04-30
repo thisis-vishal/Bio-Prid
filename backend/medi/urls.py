@@ -14,5 +14,6 @@ urlpatterns = [
     path('logout', views.LogoutView.as_view()),
     path('check',views.some_name),
     path('test',views.up),
-    path('prt',views.rt)
+    path('history',views.History.as_view()),
+    path('particularhistory',views.ParicularHistory.as_view())
 ]
