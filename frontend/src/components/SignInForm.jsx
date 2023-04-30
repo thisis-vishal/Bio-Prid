@@ -49,7 +49,7 @@ const SignInForm = () => {
       </div>
       <div className='mb-3'>
         <label className='font-medium font-poppins mb-2 flex'>Password</label>
-        <input type="password" placeholder='Enter your email' className='w-full border rounded-md bg-transparent border-gray-400 p-3' required
+        <input type="password" placeholder='Enter your password' className='w-full border rounded-md bg-transparent border-gray-400 p-3' required
         onChange={e => setPass(e.target.value)}/>
       </div>
       <div className='flex justify-between mb-6'>

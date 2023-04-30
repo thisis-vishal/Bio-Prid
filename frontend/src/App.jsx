@@ -1,9 +1,9 @@
-import {React, useState, useEffect} from 'react'
+import { React, useState, useEffect } from 'react'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import Qsar from './pages/Qsar'
 import Dti from './pages/Dti'
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Models from './pages/Models'
 import Guide from './pages/Guide'
@@ -17,13 +17,13 @@ const App = () => {
     (
       async () => {
         const response = await fetch("http://localhost:8000/user", {
-          headers: {'Content-Type': 'application/json'},
+          headers: { 'Content-Type': 'application/json' },
           credentials: "include",
         });
 
         const content = await response.json();
         console.log(content);
-        if(content.detail === "verified") {
+        if (content.detail === "verified") {
           setSigned(true);
         }
         else {
@@ -36,14 +36,14 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path='/' exact Component={() => <Home signed={signed}/>} />
+        <Route path='/' exact Component={() => <Home signed={signed} />} />
         <Route path='/signin' exact Component={() => <SignIn signed={signed} />} />
         <Route path='/signup' exact Component={() => <SignUp signed={signed} />} />
-        <Route path='/qsar' exact Component={Qsar} />
-        <Route path='/dti' exact Component={Dti} />
-        <Route path='/models' exact Component={Models} />
-        <Route path='/guide' exact Component={Guide} />
-        <Route path='/account' exact Component={Account} />
+        <Route path='/qsar' exact Component={() => <Qsar signed={signed} />} />
+        <Route path='/dti' exact Component={() => <Dti signed={signed} />} />
+        <Route path='/models' exact Component={() => <Models signed={signed} />} />
+        <Route path='/guide' exact Component={() => <Guide signed={signed} />} />
+        <Route path='/account' exact Component={() => <Account signed={signed} />} />
       </Routes>
     </Router>
   )

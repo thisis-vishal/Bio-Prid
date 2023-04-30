@@ -83,11 +83,11 @@ export const navLinks = [
 
 export const signed_navLinks = [
     {
-        id: "home",
+        id: "",
         title: "Home",
     },
     {
-        id: "guide",
+        id: "/guide",
         title: "Guide",
     },
 ];

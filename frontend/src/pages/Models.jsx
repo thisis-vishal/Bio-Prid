@@ -2,12 +2,12 @@ import React from 'react'
 import styles from '../style'
 import { Navbar, Button } from '../components'
 
-const Models = () => {
+const Models = (props) => {
     return (
         <div className="bg-primary w-full overflow-hidden">
             <div className={`${styles.paddingX} ${styles.flexCenter}`}>
                 <div className={`${styles.boxWidth}`}>
-                    <Navbar />
+                    <Navbar signed={props.signed}/>
                 </div>
             </div>
             <section id="home" className={`flex md:flex-row
