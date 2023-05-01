@@ -193,10 +193,10 @@ const Dti = (props) => {
                                         <label className='font-medium font-poppins mb-2 flex'>Target</label>
                                         <input type="text" placeholder='Enter Target protein' className='w-full border rounded-md bg-transparent border-gray-400 p-3' required onChange={onChangeProt} id="prot" ref={myRef} disabled={file}/>
                                         <input type="file" onChange={handleProtFileChange} />
-
-                                        {file && 
-                                        <input type="text" placeholder='Output Filename...' className='w-full border rounded-md bg-transparent border-gray-400 p-3 mt-4' required onChange={onChangeFileName} id="prot" ref={myFileName} />}
                                     </div>
+                                    {file && <div className="mb-3">
+                                                 <input type="text" placeholder='Output Filename...' className='w-full border rounded-md bg-transparent border-gray-400 p-2' required onChange={onChangeFileName} id="prot" ref={myFileName} />
+                                             </div>}
                                     <button className='block bg-blue-700 text-white w-full py-2 px-8 rounded' ref={myBtn}>Submit</button>
                                     {auth &&
                                         <div>

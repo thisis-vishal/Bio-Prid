@@ -153,6 +153,7 @@ const delFile = async (userID, name) => {
         });
         const content = await response.json();
         console.log(content);
+        window.location.reload(true);
     }
     catch(err) {console.log(err)}
 }
@@ -160,14 +161,14 @@ const delFile = async (userID, name) => {
 const History = (data, userID) => {
     return (
         <div className='bg-gray-200 flex flex-col h-full p-6 overflow-scroll'>
-
+            <span className='font-poppins font-semibold text-[14px] mb-4'>{data.data.QSAR.length + data.data.DTI.length} records found...</span>
             {data.data.QSAR.map((item) => (
                 <div className={`w-full hover:border-2 hover:border-black hover:font-semibold hover:transition bg-save rounded p-2 mb-2`}>
                     <span className='font-poppins text-[12px] mr-4'>Created: {new Date(item.time.$date).toLocaleString('en-IN', { timeZone: 'IST' })}</span>
                     <span className='text-blue-600 font-semibold text-[14px] float-right cursor-pointer ml-2 mr-2 mt-auto mb-auto hover:shadow-lg'>
                         <button onClick={() => export_file(item.data, item.name)}>Download</button>
                     </span>
-                    <span className='font-poppins font-semibold text-[14px] text-red-600 float-right cursor-pointer ml-2 mr-2'>
+                    <span className='font-poppins font-semibold text-[14px] text-red-600 float-right cursor-pointer ml-2 mr-2 hover:shadow-lg'>
                         <button onClick={() => delFile(userID,item.name)}>Delete</button>
                     </span>
                     <br />
@@ -182,7 +183,9 @@ const History = (data, userID) => {
                     <span className='font-poppins text-[12px] mr-4'>Created: {new Date(item.time.$date).toLocaleString('en-IN', { timeZone: 'IST' })}</span>
                     <span className='text-blue-600 font-semibold text-[14px] float-right cursor-pointer ml-2 mr-2 mt-auto mb-auto hover:shadow-lg'>
                         <button onClick={() => export_file(item.data, item.name)}>Download</button></span>
-                    <span className='font-poppins font-semibold text-[14px] text-red-600 float-right cursor-pointer ml-2 mr-2'>Delete</span>
+                    <span className='font-poppins font-semibold text-[14px] text-red-600 float-right cursor-pointer ml-2 mr-2 hover:shadow-lg'>
+                        <button onClick={() => delFile(userID,item.name)}>Delete</button>
+                    </span>
                     <br />
                     <div className='w-full flex flex-row'>
                         <span className='font-poppins font-semibold text-[14px] text-blue-800'>{item.name}.csv</span>
