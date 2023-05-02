@@ -164,7 +164,8 @@ class RegisterView(APIView):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        mydict = { "emailid": serializer.data['email']}
+        dbname.medi_user.dropIndexes
+        mydict = { "email": request.data['email'],"id":serializer.data["id"],"DTI":[],"QSAR":[]}
         collection_name.insert_one(mydict)
         return Response(serializer.data)
 
@@ -236,8 +237,10 @@ class History(APIView):
             x=collection_name.find({ 'email':request.data['email']})
             y=self.parse_json(x)
             print(y)
-            return Response({"data":y[0]})
-
+            if y[0]:
+                return Response({"data":y[0]})
+            else:
+                return Response({"data":'no history'})
 class ParicularHistory(APIView):
 
     def parse_json(self,data):
