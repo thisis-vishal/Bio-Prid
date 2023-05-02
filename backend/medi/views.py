@@ -2,13 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
-from . import perf
 from rest_framework.exceptions import AuthenticationFailed
 from . serializer import *
 from rest_framework.response import Response
 from .Model import data_pre_process,EDA,model_v1,molecular_descriptors_and_fingerprinting,PaDel_Descriptor,DTI_model,dumfiles
 import pandas as pd
-from .models import User, History
+from .models import User, history
 import jwt
 import json
 import datetime
@@ -26,13 +25,13 @@ collection_name = dbname["medi_history"]
 
 
 
+
 # Create your views here.
 
 class ReactView(APIView):
     
     serializer_class = ReactSerializer
     def out(self,data):
-        print(data)
         data_pre_process.preProcess(str(data['targetID']))
         EDA.runEDA()
         molecular_descriptors_and_fingerprinting.mdf()
@@ -165,8 +164,8 @@ class RegisterView(APIView):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        mydict = { "email": serializer.data['email']}
-        x = collection_name.insert_one(mydict)
+        mydict = { "emailid": serializer.data['email']}
+        collection_name.insert_one(mydict)
         return Response(serializer.data)
 
 

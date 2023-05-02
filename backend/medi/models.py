@@ -15,7 +15,7 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-class History(models.Model):
+class history(models.Model):
    emailid=models.CharField(max_length=100)
    QSAR = models.JSONField()
    DTI=models.JSONField()

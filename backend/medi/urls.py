@@ -14,3 +14,6 @@ urlpatterns = [
     path('particularhistory',views.ParicularHistory.as_view()),
     path('delhistory',views.DeleteHistory.as_view()),
 ]
+
+
+
