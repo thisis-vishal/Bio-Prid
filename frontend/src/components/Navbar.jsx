@@ -86,7 +86,7 @@ const Navbar = ({ colorChange, signed }) => {
           ))}
           <li 
             key={user}
-            className={`cursor-pointer  mr-0`}
+            className={`cursor-pointer mr-10`}
           >
             <div className="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
               <Link to="/account">

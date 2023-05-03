@@ -161,7 +161,7 @@ const delFile = async (userID, name) => {
 const History = (data, userID) => {
     return (
         <div className='bg-gray-200 flex flex-col h-full p-6 overflow-scroll'>
-            <span className='font-poppins font-semibold text-[14px] mb-4'>{data.data.QSAR.length + data.data.DTI.length} records found...</span>
+            <span className='font-poppins font-semibold text-[14px] mb-4'>{0 + (data.data.QSAR!=undefined ? data.data.QSAR.length : 0) + (data.data.DTI!=undefined ? data.data.DTI.length : 0)} records found...</span>
             {data.data.QSAR.map((item) => (
                 <div className={`w-full hover:border-2 hover:border-black hover:font-semibold hover:transition bg-save rounded p-2 mb-2`}>
                     <span className='font-poppins text-[12px] mr-4'>Created: {new Date(item.time.$date).toLocaleString('en-IN', { timeZone: 'IST' })}</span>
