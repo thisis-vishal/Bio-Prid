@@ -84,9 +84,9 @@ const Navbar = ({ colorChange, signed }) => {
               </a>
             </li>
           ))}
-          <li 
+          <li
             key={user}
-            className={`cursor-pointer mr-10`}
+            className={`cursor-pointer  mr-10`}
           >
             <div className="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
               <Link to="/account">
@@ -97,6 +97,11 @@ const Navbar = ({ colorChange, signed }) => {
         </ul>
 
         <div className='sm:hidden flex flex-1 justify-end items-center'>
+          <div className="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 object-contain mr-8 ml-8">
+            <Link to="/account">
+              <svg className="absolute w-12 h-12 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path></svg>
+            </Link>
+          </div>
           <img src={toggle ? close : menu}
             alt="menu"
             className="w-[28px] h-[28px]

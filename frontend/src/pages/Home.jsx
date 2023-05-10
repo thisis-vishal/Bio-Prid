@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios';
+import Card from '../components/Card';
 import styles from '../style'
 import { ai_need } from '../constants'
 import { right } from '../assets';
@@ -20,7 +22,7 @@ const Home = (props) => (
             </div>
         </div>
 
-        <div className={`bg-primary ${styles.flexStart} ml-12 mr-12`}>
+        <div className={`bg-primary ${styles.flexStart}`}>
             <div className={`${styles.boxWidth}`}>
                 <CardDeal />
             </div>
@@ -33,7 +35,7 @@ const Home = (props) => (
                         <div className='flex flex-row justify-between items-center w-full bg-hero-lg'>
                             <div className="absolute left w-[5px] h-[50px]  bg-blue-600">
                             </div>
-                            <h1 className='flex-1 font-poppins font-semibold ss:text-[42px] text-[52px] ss:leading-[100px] leading-[75px] ml-6 mb-0'>Need of <br className='sm: hidden' /> AI in Drug Screening
+                            <h1 className='flex-1 font-poppins font-semibold ss:text-[42px] text-[32px] ss:leading-[100px] leading-[75px] ml-6 mb-0'>Need of <br className='sm: hidden' /> AI in Drug Screening
                             </h1>
                         </div>
                     </div>
@@ -49,7 +51,7 @@ const Home = (props) => (
                         <div className='flex flex-row justify-between items-center w-full bg-hero-lg'>
                             <div className="absolute left w-[5px] h-[50px]  bg-blue-600">
                             </div>
-                            <h1 className='flex-1 font-poppins font-semibold ss:text-[42px] text-[52px]  ss:leading-[100px] leading-[75px] ml-6'>Capabilities
+                            <h1 className='flex-1 font-poppins font-semibold ss:text-[42px] text-[32px]  ss:leading-[100px] leading-[75px] ml-6'>Capabilities
                             </h1>
                         </div>
                     </div>
@@ -57,18 +59,18 @@ const Home = (props) => (
                         <div className='flex flex-col justify-between items-left w-full bg-hero-lg'>
                             <div className='flex flex-row items-left'>
                                 <Link to="/guide">
-                                    <h1 className='flex flex-row font-poppins font-semibold ss:text-[22px] text-[32px] hover:text-blue-800 ss:leading-[100px] leading-[75px] ml-6'>Quantitative Structure-Activity Relationship <img src={right} className='w-[30px] h-[30px] ml-6 mt-auto mb-auto'/>
+                                    <h1 className='flex flex-row font-poppins font-semibold ss:text-[22px] text-[18px] hover:text-blue-800 ss:leading-[100px] leading-[75px] ml-6'>Quantitative Structure-Activity Relationship <img src={right} className='w-[30px] h-[30px] ml-6 mt-auto mb-auto'/>
                                     </h1>
                                 </Link>                                
                             </div>
                             <div className='flex flex-row items-left'>
                                 <Link to="/guide">
-                                    <h1 className='flex flex-row font-poppins font-semibold ss:text-[22px] text-[32px] hover:text-blue-800 ss:leading-[100px] leading-[75px] ml-6'>Drug-Target Interaction
+                                    <h1 className='flex flex-row font-poppins font-semibold ss:text-[22px] text-[18px] hover:text-blue-800 ss:leading-[100px] leading-[75px] ml-6'>Drug-Target Interaction
                                         <img src={right} className='w-[30px] h-[30px] ml-6 mt-auto mb-auto'/>
                                     </h1>
                                 </Link>
                             </div>
-                            
+
                         </div>
                     </div>
                 </section>
@@ -76,5 +78,3 @@ const Home = (props) => (
         </div>
     </div>
 );
-
-export default Home;

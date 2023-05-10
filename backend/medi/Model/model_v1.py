@@ -20,7 +20,7 @@ def QSAR(fp):
 
     df_Y = df_new["bioactivity_class"]
 
-    df_X = df_new.drop(["bioactivity_class"], axis=1)
+    df_X = df_new.drop(["bioactivity_class","PIC50"], axis=1)
 
     # Label Encoding
     encoder = LabelEncoder()
@@ -28,15 +28,18 @@ def QSAR(fp):
     new_Y = encoder.transform(df_Y)
 
     df_new_Y = pd.DataFrame(new_Y, columns=["bioactivity_class"])
+    # df_new_Y.drop("PIC50",inplace = True)
 
     train_X, test_X, train_Y, test_Y = train_test_split(
         df_X, df_new_Y, test_size=0.1, random_state=42)
+    
+    print(test_X.iloc[0])
 
     # define network architecture
     MLP = Sequential()
-    MLP.add(InputLayer(input_shape=(882, ))) # input layer
+    MLP.add(InputLayer(input_shape=(881, ))) # input layer
     MLP.add(Dense(256, activation='relu')) # hidden layer 1
-    MLP.add(Dense(256, activation='relu',kernel_regularizer=regularizers.l2(0.01) )) # hidden layer 2
+    MLP.add(Dense(256, activation='relu')) # hidden layer 2
     MLP.add(Dense(1, activation='sigmoid')) # output layer
 
     # optimization
@@ -45,21 +48,23 @@ def QSAR(fp):
                 metrics=['accuracy'])
 
     MLP.fit(train_X, train_Y, validation_data = (test_X, test_Y), 
-        epochs=10, batch_size=48)
+        epochs=8, batch_size=16)
 
     # # evaluate performance
     # test_loss, test_acc = MLP.evaluate(test_X, test_Y,
     #                                 batch_size=48,verbose=0)
 
-
-    fp["Name"] = int(0)
+    print(fp)
+    # fp["Name"] = int(0)
+    fp.drop(["Name"], axis=1,inplace = True)
+    print(fp)
 
     fingerprint = np.asarray(fp)
 
-    fingerprint = np.reshape(fingerprint, (-1, 882))
+    fingerprint = np.reshape(fingerprint, (-1, 881))
 
     res = MLP.predict(fingerprint, verbose=0)
-
+    print(res)
     result = []
     for r in res:
         if r[0] >= 0.5:

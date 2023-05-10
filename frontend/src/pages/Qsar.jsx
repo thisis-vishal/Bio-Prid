@@ -57,15 +57,6 @@ const Qsar = (props) => {
         const btn_element = myBtn.current;
         btn_element.disabled = true;
         btn_element.innerText = "Processing...";
-        // simpliyfy with ternary operator...
-        // let postdata = {
-        //     molecule: (!SelectFile ? value : null),
-        //     target: target,
-        //     file: (!SelectFile ? null : File)
-        //     // molecule: value,
-        //     // targetID: target,
-        //     // targetName: targetName
-        // };
 
         let user_details, user_data_json;
         try {
@@ -133,6 +124,7 @@ const Qsar = (props) => {
         console.log("response: ", response);
         if (_file) {
             const content = await response.blob();
+            console.log("content: ", content);
             var csvURL = window.URL.createObjectURL(content);
             var tempLink = document.createElement('a');
             tempLink.href = csvURL;

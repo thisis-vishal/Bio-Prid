@@ -237,10 +237,10 @@ class History(APIView):
             x=collection_name.find({ 'email':request.data['email']})
             y=self.parse_json(x)
             print(y)
-            if y[0]:
+            if y!=[]:
                 return Response({"data":y[0]})
             else:
-                return Response({"data":'no history'})
+                return Response({"data":{}})
 class ParicularHistory(APIView):
 
     def parse_json(self,data):

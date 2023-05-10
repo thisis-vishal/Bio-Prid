@@ -22,7 +22,7 @@ const App = () => {
         });
 
         const content = await response.json();
-        console.log(content);
+        //console.log(content);
         if (content.detail === "verified") {
           setSigned(true);
         }
@@ -44,6 +44,7 @@ const App = () => {
         <Route path='/models' exact Component={() => <Models signed={signed} />} />
         <Route path='/guide' exact Component={() => <Guide signed={signed} />} />
         <Route path='/account' exact Component={() => <Account signed={signed} />} />
+        <Route path='/tv/:id' exact Component={Home} />
       </Routes>
     </Router>
   )
